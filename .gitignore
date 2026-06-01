@@ -1,0 +1,9 @@
+*.csproj
+*.sln
+.vs/
+Library/
+obj/
+Logs/
+Temp/
+UserSettings/
+Assets/OpenCVForUnity
