@@ -62,17 +62,33 @@ public static class AvatarContourExtractor
             edge,
             contours,
             new Mat(),
-            Imgproc.RETR_LIST,
+        config.KeepOnlyOuterContours
+        ? Imgproc.RETR_EXTERNAL
+        : Imgproc.RETR_LIST,
             Imgproc.CHAIN_APPROX_NONE);
 
         //--------------------------------
-        // 过滤小轮廓
+        // 过滤小轮廓(面积)、短轮廓（长度）
         //--------------------------------
 
         contours.RemoveAll(contour =>
         {
-            return Imgproc.contourArea(contour)
-                < config.MinContourArea;
+            double area =
+                Imgproc.contourArea(contour);
+
+            if (area < config.MinContourArea)
+                return true;
+
+            double length =
+                Imgproc.arcLength(
+                    new MatOfPoint2f(
+                        contour.toArray()),
+                    true);
+
+            if (length < config.MinContourLength)
+                return true;
+
+            return false;
         });
 
         //--------------------------------

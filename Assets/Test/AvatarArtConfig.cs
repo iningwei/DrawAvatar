@@ -18,6 +18,9 @@ public class AvatarArtConfig
     [Range(1, 1000)]
     public float MinContourArea = 100;
 
+    [Range(10, 1000)]
+    public float MinContourLength = 50;
+
     [Range(1, 25000)]
     public int MaxContours = 30;
 
@@ -27,4 +30,6 @@ public class AvatarArtConfig
     public Color StrokeColor = Color.black;
 
     public Color BackgroundColor = Color.white;
+
+    public bool KeepOnlyOuterContours = true;
 }
