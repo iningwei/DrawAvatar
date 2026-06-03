@@ -6,6 +6,7 @@ using OpenCVForUnity.CoreModule;
 using OpenCVForUnity.UnityUtils;
 using OpenCVForUnity.ImgprocModule;
 using System.Collections;
+using OpenCVForUnity.UnityIntegration;
 
 public class AvatarArtGenerator : MonoBehaviour
 {
@@ -20,8 +21,53 @@ public class AvatarArtGenerator : MonoBehaviour
 
     [Header("昵称")]
     public string NickName;
+    [Header("笔")]
+    public Image PenImg;
 
     public AvatarSignature Signature;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            this.GenerateWithAnim();
+        }
+    }
+
+    public void GenerateWithAnim()
+    {
+        if (Avatar == null)
+            return;
+
+        //----------------------------------
+        // Texture -> Mat
+        //----------------------------------
+
+        Mat src = new Mat(
+            Avatar.height,
+            Avatar.width,
+            CvType.CV_8UC4);
+
+        OpenCVMatUtils.Texture2DToMat(
+            Avatar,
+            src);
+
+        //----------------------------------
+        // 提取轮廓
+        //----------------------------------
+
+        List<MatOfPoint> contours =
+            AvatarContourExtractor.ExtractContours(
+                src,
+                Config);
+
+        //动态绘制
+        StartCoroutine(
+    DrawArtAnimated(
+        contours,
+        src.width(),
+        src.height()));
+    }
 
     [ContextMenu("Generate")]
     public void Generate()
@@ -38,7 +84,7 @@ public class AvatarArtGenerator : MonoBehaviour
             Avatar.width,
             CvType.CV_8UC4);
 
-        Utils.texture2DToMat(
+        OpenCVMatUtils.Texture2DToMat(
             Avatar,
             src);
 
@@ -51,28 +97,15 @@ public class AvatarArtGenerator : MonoBehaviour
                 src,
                 Config);
 
-        //// 绘制艺术图 
-        //Texture2D result =
-        //    DrawArtTexture(
-        //        contours,
-        //        src.width(),
-        //        src.height());
-        //// 显示 
-        //ArtImage.texture = result;
+        // 绘制艺术图 
+        Texture2D result =
+            DrawArtTexture(
+                contours,
+                src.width(),
+                src.height());
+        // 显示 
+        ArtImage.texture = result;
 
-        //动态绘制
-        StartCoroutine(
-    DrawArtAnimated(
-        contours,
-        src.width(),
-        src.height()));
-
-        //// 昵称 
-        //if (Signature != null)
-        //{
-        //    Signature.SetName(
-        //        NickName);
-        //}
     }
 
     private Texture2D DrawArtTexture(
@@ -125,7 +158,7 @@ public class AvatarArtGenerator : MonoBehaviour
                 TextureFormat.RGBA32,
                 false);
 
-        Utils.matToTexture2D(
+        OpenCVMatUtils.MatToTexture2D(
             canvas,
             tex);
 
@@ -225,7 +258,7 @@ public class AvatarArtGenerator : MonoBehaviour
 
     private Texture2D DrawArtTextureAnimated(
     List<MatOfPoint> finishedContours,
-    MatOfPoint growingContour,
+    AnimatedContour animContour,
     float progress,
     int width,
     int height)
@@ -261,7 +294,7 @@ public class AvatarArtGenerator : MonoBehaviour
 
         DrawPartialContour(
             canvas,
-            growingContour,
+            animContour.SmoothPoints,
             progress);
 
         //---------------------------------
@@ -275,7 +308,7 @@ public class AvatarArtGenerator : MonoBehaviour
                 TextureFormat.RGBA32,
                 false);
 
-        Utils.matToTexture2D(
+        OpenCVMatUtils.MatToTexture2D(
             canvas,
             tex);
 
@@ -284,65 +317,24 @@ public class AvatarArtGenerator : MonoBehaviour
 
     private void DrawPartialContour(
     Mat canvas,
-    MatOfPoint contour,
+    List<Vector2> smoothPoints,
     float progress)
     {
-        //---------------------------------
-        // 简化
-        //---------------------------------
-
-        contour =
-            ContourSimplifier.Simplify(
-                contour,
-                Config.Abstraction);
-
-        Point[] points =
-            contour.toArray();
-
-        if (points.Length < 2)
-            return;
-
-        //---------------------------------
-        // 平滑
-        //---------------------------------
-
-        List<Vector2> unityPoints =
-            new List<Vector2>();
-
-        foreach (Point p in points)
-        {
-            unityPoints.Add(
-                new Vector2(
-                    (float)p.x,
-                    (float)p.y));
-        }
-
-        int smoothLevel =
-            Mathf.RoundToInt(
-                Mathf.Lerp(
-                    2,
-                    12,
-                    Config.Smoothness));
-
-        if (unityPoints.Count >= 4)
-        {
-            unityPoints =
-                CatmullRomUtility.SmoothClosed(
-                    unityPoints,
-                    smoothLevel);
-        }
 
         //---------------------------------
         // 生长进度
-        //---------------------------------
-
-        int visibleCount =
-            Mathf.Clamp(
-                Mathf.RoundToInt(
-                    unityPoints.Count *
-                    progress),
-                2,
-                unityPoints.Count);
+        //--------------------------------- 
+        //int visibleCount =
+        //    Mathf.Clamp(
+        //        Mathf.RoundToInt(//按点数增长
+        //            smoothPoints.Count *
+        //            progress),
+        //        2,
+        //        smoothPoints.Count); 
+        int visibleCount = Mathf.Clamp(//按路径长度生长
+    GetVisiblePointCount(
+        smoothPoints,
+        progress), 2, smoothPoints.Count);
 
         Point[] drawPoints =
             new Point[visibleCount];
@@ -353,8 +345,8 @@ public class AvatarArtGenerator : MonoBehaviour
         {
             drawPoints[i] =
                 new Point(
-                    unityPoints[i].x,
-                    unityPoints[i].y);
+                    smoothPoints[i].x,
+                    smoothPoints[i].y);
         }
 
         MatOfPoint partial =
@@ -383,36 +375,50 @@ public class AvatarArtGenerator : MonoBehaviour
             Imgproc.LINE_AA);
     }
 
+
+    List<AnimatedContour> animatedContours =
+    new List<AnimatedContour>();
     //动画协程
     public IEnumerator DrawArtAnimated(
     List<MatOfPoint> contours,
     int width,
     int height)
     {
+        foreach (var contour in contours)
+        {
+            animatedContours.Add(
+       BuildAnimatedContour(
+           contour));
+        }
+
         //---------------------------------
         // 大轮廓优先
         //---------------------------------
+        animatedContours.Sort(
+    (a, b) =>
+    {
+        return Imgproc.contourArea(
+            b.OriginalContour)
+        .CompareTo(
+            Imgproc.contourArea(
+            a.OriginalContour));
+    });
 
-        contours.Sort((a, b) =>
-        {
-            return Imgproc.contourArea(b)
-                .CompareTo(
-                    Imgproc.contourArea(a));
-        });
+
 
         List<MatOfPoint> finished =
             new List<MatOfPoint>();
-
-        foreach (var contour in contours)
+        int index = 0;
+        foreach (var contour in animatedContours)
         {
+
             //---------------------------------
             // 按轮廓长度决定动画时间
-            //---------------------------------
-
+            //--------------------------------- 
             double length =
                 Imgproc.arcLength(
                     new MatOfPoint2f(
-                        contour.toArray()),
+                        contour.OriginalContour.toArray()),
                     true);
 
             float duration =
@@ -423,6 +429,8 @@ public class AvatarArtGenerator : MonoBehaviour
                         (float)length / 1000f));
 
             float timer = 0;
+            Debug.Log("begin drow contour:" + index + ",totalCount:" + contours.Count + ", duration:" + duration + ",length:" + length);
+            index++;
 
             while (timer < duration)
             {
@@ -444,11 +452,27 @@ public class AvatarArtGenerator : MonoBehaviour
                 ArtImage.texture =
                     tex;
 
+                //--------------------------------
+                // 笔尖跟随
+                //-------------------------------- 
+                Vector2 penPoint =
+                    GetPenPosition(
+                      contour.SmoothPoints,
+                        progress);
+
+                PenImg.rectTransform
+                    .anchoredPosition =
+                    ImagePixelToUIPosition(
+                        penPoint.x,
+                        penPoint.y);
+
+                //TODO：笔尖旋转（朝向运动方向）
+
                 yield return null;
             }
 
             finished.Add(
-                contour);
+                contour.OriginalContour);
         }
 
         //---------------------------------
@@ -473,5 +497,184 @@ public class AvatarArtGenerator : MonoBehaviour
             Signature.SetName(
                 NickName);
         }
+    }
+
+
+    private Vector2 ImagePixelToUIPosition(
+    float x,
+    float y)
+    {
+        RectTransform rt =
+            ArtImage.rectTransform;
+
+        float width =
+            ArtImage.texture.width;
+
+        float height =
+            ArtImage.texture.height;
+
+        float px =
+            (x / width) * rt.rect.width;
+
+        float py =
+            (y / height) * rt.rect.height;
+
+        px -= rt.rect.width * 0.5f;
+        py -= rt.rect.height * 0.5f;
+
+        py = -py;
+
+        return new Vector2(px, py);
+    }
+
+
+    //路径长度计算
+    private float CalculateLength(
+    List<Vector2> points)
+    {
+        float length = 0;
+
+        for (int i = 1;
+             i < points.Count;
+             i++)
+        {
+            length +=
+                Vector2.Distance(
+                    points[i - 1],
+                    points[i]);
+        }
+
+        return length;
+    }
+
+    //获取路径进度点
+    private int GetVisiblePointCount(
+    List<Vector2> points,
+    float progress)
+    {
+        float totalLength =
+            CalculateLength(points);
+
+        float targetLength =
+            totalLength * progress;
+
+        float currentLength = 0;
+
+        for (int i = 1;
+             i < points.Count;
+             i++)
+        {
+            currentLength +=
+                Vector2.Distance(
+                    points[i - 1],
+                    points[i]);
+
+            if (currentLength >= targetLength)
+                return i;
+        }
+
+        return points.Count;
+    }
+
+    //获取笔尖位置
+    private Vector2 GetPenPosition(
+    List<Vector2> points,
+    float progress)
+    {
+        float totalLength =
+            CalculateLength(points);
+
+        float targetLength =
+            totalLength * progress;
+
+        float currentLength = 0;
+
+        for (int i = 1;
+             i < points.Count;
+             i++)
+        {
+            float segment =
+                Vector2.Distance(
+                    points[i - 1],
+                    points[i]);
+
+            if (currentLength + segment >= targetLength)
+            {
+                float remain =
+                    targetLength -
+                    currentLength;
+
+                float t =
+                    remain / segment;
+
+                return Vector2.Lerp(
+                    points[i - 1],
+                    points[i],
+                    t);
+            }
+
+            currentLength += segment;
+        }
+
+        return points[^1];
+    }
+
+
+
+    //预处理轮廓
+    private AnimatedContour BuildAnimatedContour(
+    MatOfPoint contour)
+    {
+        contour =
+            ContourSimplifier.Simplify(
+                contour,
+                Config.Abstraction);
+
+        Point[] points =
+            contour.toArray();
+
+        List<Vector2> unityPoints =
+            new List<Vector2>();
+
+        foreach (Point p in points)
+        {
+            unityPoints.Add(
+                new Vector2(
+                    (float)p.x,
+                    (float)p.y));
+        }
+
+        int smoothLevel =
+            Mathf.RoundToInt(
+                Mathf.Lerp(
+                    2,
+                    12,
+                    Config.Smoothness));
+
+        List<Vector2> smoothPoints =
+            unityPoints;
+
+        if (unityPoints.Count >= 4)
+        {
+            smoothPoints =
+                CatmullRomUtility.SmoothClosed(
+                    unityPoints,
+                    smoothLevel);
+        }
+
+        AnimatedContour result =
+            new AnimatedContour();
+
+        result.OriginalContour =
+            contour;
+
+        result.SmoothPoints =
+            smoothPoints;
+
+        result.Length =
+            CalculateLength(
+                smoothPoints);
+
+        return result;
     }
 }
