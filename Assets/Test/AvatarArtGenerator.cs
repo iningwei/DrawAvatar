@@ -466,7 +466,15 @@ public class AvatarArtGenerator : MonoBehaviour
                         penPoint.x,
                         penPoint.y);
 
-                //TODO：笔尖旋转（朝向运动方向）
+                // 笔尖旋转（朝向运动方向）
+                Vector2 next =
+    GetPenPosition(
+        contour.SmoothPoints,
+        Mathf.Clamp01(
+            progress + 0.01f));
+                UpdatePenRotation(
+    penPoint,
+    next);
 
                 yield return null;
             }
@@ -619,7 +627,25 @@ public class AvatarArtGenerator : MonoBehaviour
         return points[^1];
     }
 
+    private void UpdatePenRotation(
+    Vector2 current,
+    Vector2 next)
+    {
+        Vector2 dir =
+            next - current;
 
+        float angle =
+            Mathf.Atan2(
+                dir.y,
+                dir.x)
+                * Mathf.Rad2Deg;
+
+        PenImg.rectTransform.rotation =
+            Quaternion.Euler(
+                0,
+                0,
+                angle - 90);
+    }
 
     //预处理轮廓
     private AnimatedContour BuildAnimatedContour(
