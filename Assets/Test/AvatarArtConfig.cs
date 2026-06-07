@@ -5,31 +5,38 @@ using UnityEngine;
 [System.Serializable]
 public class AvatarArtConfig
 {
-    [Header("ÂÖÀª")]
+    [Header("è½®å»“")]
     [Range(0, 1)]
-    public float Detail = 0.7f;
+    public float Detail = 0.5f;
 
     [Range(0, 1)]
-    public float Abstraction = 0.4f;
+    public float Abstraction = 0.55f;
 
     [Range(0, 1)]
-    public float Smoothness = 0.6f;
+    public float Smoothness = 0.5f;
 
     [Range(1, 1000)]
-    public float MinContourArea = 100;
+    public float MinContourArea = 200;
 
     [Range(10, 1000)]
-    public float MinContourLength = 50;
+    public float MinContourLength = 80;
 
     [Range(1, 25000)]
-    public int MaxContours = 30;
+    public int MaxContours = 50;
 
     [Range(1, 20)]
-    public int StrokeWidth = 3;
+    public int StrokeWidth = 2;
 
     public Color StrokeColor = Color.black;
 
     public Color BackgroundColor = Color.white;
 
     public bool KeepOnlyOuterContours = true;
+
+    [Range(0, 1f)]
+    public float MinContourAreaRatio = 0.005f;
+
+    [Header("å™ªå£°æŠ‘åˆ¶")]
+    [Range(0, 1)]
+    public float NoiseSuppression = 0.5f;
 }
