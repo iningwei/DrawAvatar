@@ -370,6 +370,7 @@ public class AvatarArtGenerator : MonoBehaviour
         List<MatOfPoint> finished =
             new List<MatOfPoint>();
         int index = 0;
+        float totalUsedTime = 0f;
         foreach (var contour in animatedContours)
         {
             double length =
@@ -380,13 +381,14 @@ public class AvatarArtGenerator : MonoBehaviour
 
             float duration =
                 Mathf.Lerp(
-                    0.15f,
-                    1.0f,
+                    0.06f,
+                    2.0f,
                     Mathf.Clamp01(
-                        (float)length / 1000f));
+                        (float)length / 5000f));
 
             float timer = 0;
             Debug.Log("begin drow contour:" + index + ",totalCount:" + contours.Count + ", duration:" + duration + ",length:" + length);
+            totalUsedTime += duration;
             index++;
 
             while (timer < duration)
@@ -435,6 +437,8 @@ public class AvatarArtGenerator : MonoBehaviour
             finished.Add(
                 contour.OriginalContour);
         }
+
+        Debug.LogError("总用时：" + totalUsedTime);
 
         Texture2D final =
             DrawArtTexture(
