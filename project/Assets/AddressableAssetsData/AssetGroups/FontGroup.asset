@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: FontGroup
+  m_EditorClassIdentifier: 
+  m_GroupName: FontGroup
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 60799868f5eaa7f4d86b0f0390415e52
+  m_SerializeEntries:
+  - m_GUID: 04362844ca4ce1549900116df8401653
+    m_Address: SourceHanSansSC-Medium Atlas Material-outline-red-0.3.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 33af81929bb198142b47c5c4395ec100
+    m_Address: SourceHanSansSC-Medium Atlas Material-outline-0.3.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9cd8f3047fdbb8b44b403a6163f59cde
+    m_Address: SourceHanSansSC-Medium Atlas Material-outline-brown-0.3.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a9f2714776594874b8d363189a29bae5
+    m_Address: SourceHanSansSC-Medium Atlas Material-outline-blue-0.3.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fe76d703901cbfa4fb1f98d5acb87608
+    m_Address: SourceHanSansSC-Medium SDF.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 285b97508bfb6d34285ab9363d883299, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 9717dcb75cca49d458ef772ee82769f4, type: 2}
+    - {fileID: 11400000, guid: 5aecb5616e1b9dc43a1e8fdfa6d8cb8a, type: 2}
