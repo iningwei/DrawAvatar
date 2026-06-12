@@ -1,0 +1,66 @@
+{
+	"ProductName": "pn",
+	"AppVersion": "1.0.1",
+	"AppBundleVersion": "1",
+	"ResVersion": "0",
+	"PackTimeStamp": "2402022222",
+	"GameChannelId": 100,
+	"PaymentChannelId": 2,
+	"IsABResNameCrypto": true,
+	"ABResNameCryptoKey": "hijack88",
+	"ABResByteOffset": 3,
+	"GameDesignRatio": "1080,1920",
+	"ScreenOrientation": 1,
+	"GameInputType": 1,
+	"ResLoadType": 2,
+	"FirstOpenWindowName": "LoginWindow",
+	 
+	"LoginData": [
+		{
+			"LoginType": "PUB",
+			"PostURL": "http://47.108.80.167/rpg/api"
+		},
+		{
+			"LoginType": "PUBTEST",
+			"PostURL": "http://47.108.80.167/rpg/api"
+		},
+		{
+			"LoginType": "TEST",
+			"PostURL": "https://xxx3:8082/api"
+		},
+		{
+			"LoginType": "DEV",
+			"PostURL": "http://172.16.10.45:16000"
+		},
+		{
+			"LoginType": "DEV_GW",
+			"PostURL": "http://172.16.10.24:14001"
+		}
+	],
+	"PackData": [ 
+		{
+			"PackType": "PUB",
+			"FtpTxtFileURL": "http://log.qiyoogame.com/hot/meta_v2/pub",
+			"FtpZipFileURL": "http://log.qiyoogame.com/hot/meta_v2/pub"
+		},
+		{
+			"PackType": "DEV",
+			"FtpTxtFileURL": "http://log.qiyoogame.com/hot/meta_v2/dev",
+			"FtpZipFileURL": "http://log.qiyoogame.com/hot/meta_v2/dev"
+		},
+		{
+			"PackType": "TEST",
+			"FtpTxtFileURL": "http://log.qiyoogame.com/hot/meta_v2/test",
+			"FtpZipFileURL": "http://log.qiyoogame.com/hot/meta_v2/test"
+		}
+	],
+	"LoginType": "DEV",
+	"PackType": "PUB",
+	"IsRealPurchase": true,
+	"IsShowProtoMsgLog": false,
+	"IsShowDebugBtn": false,
+	"IsEnableLogTrace": false,
+	"IsEnableLogRealtimeWriteToLocal": false,
+	"IsEnableLogUpdate2Server": false,
+	"IsShowReporter": false
+}

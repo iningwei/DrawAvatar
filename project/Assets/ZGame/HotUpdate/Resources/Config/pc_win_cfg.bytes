@@ -1,0 +1,124 @@
+{
+	"ProductName": "WestJourney",
+	"AppVersion": "1.0.1",
+	"AppBundleVersion": "1",
+	"ResVersion": "0",
+	"PackTimeStamp": "2402022222",
+	"GameChannelId": 100,
+	"PaymentChannelId": 2,
+	"IsABResNameCrypto": true,
+	"ABResNameCryptoKey": "hijack88",
+	"ABResByteOffset": 3,
+	"GameDesignRatio": "1080,2346",
+	"ScreenOrientation": 1,
+	"GameInputType": 1, 
+	"ResLoadType": 2,
+	"FirstOpenWindowName": "LoginWindow",
+	 
+	"ChannelInfo":[
+		{
+			"ChannelID":100,
+			"LoginData": [
+				{
+					"LoginType": "PUB",
+					"PostURL": "http://dyshoot.qiyoogame.com/api/login_dy_live"
+				},
+				{
+					"LoginType": "PUBTEST",
+					"PostURL": "https://service-advance.qiyoogame.com/westjourney/api/login_dy_live"
+				},
+				{
+					"LoginType": "TEST",
+					"PostURL": "https://xxx3:8082/api"
+				},
+				{
+					"LoginType": "DEV",
+					"PostURL": "http://172.16.10.128:10001/login_dy_live"
+				},
+				{
+					"LoginType": "DEV_GW",
+					"PostURL": "http://172.16.10.24:12000/login_dy_live"
+				}
+			],
+			"PackData": [ 
+				{
+					"PackType": "PUB",
+					"FtpTxtFileURL": "http://update.qiyoogame.com/westjourney/hotupdate",
+					"FtpZipFileURL": "xxx"
+				},
+				{
+					"PackType": "PUBTEST",
+					"FtpTxtFileURL": "http://update.qiyoogame.com/westjourney/hotupdate",
+					"FtpZipFileURL": "xxx"
+				},
+				{
+					"PackType": "DEV",
+					"FtpTxtFileURL": "http://update.qiyoogame.com/westjourney/hotupdate",
+					"FtpZipFileURL": "xxx"
+				},
+				{
+					"PackType": "TEST",
+					"FtpTxtFileURL": "http://log.qiyoogame.com/hot/meta_v2/test",
+					"FtpZipFileURL": "http://log.qiyoogame.com/hot/meta_v2/test"
+				}
+			]
+		},
+		{
+			"ChannelID":200,
+			"LoginData": [
+				{
+					"LoginType": "PUB",
+					"PostURL": "http://kspetsaction.qiyoogame.com/api/login_ks_live"
+				},
+				{
+					"LoginType": "PUBTEST",
+					"PostURL": "http://8.137.163.10/ksapi/login_ks_live"
+				},
+				{
+					"LoginType": "TEST",
+					"PostURL": "https://xxx3:8082/api"
+				},
+				{
+					"LoginType": "DEV",
+					"PostURL": "http://172.16.10.128:24000/login_ks_live"
+				},
+				{
+					"LoginType": "DEV_GW",
+					"PostURL": "http://172.16.10.24:12000/login_dy_live"
+				}
+			],
+			"PackData": [ 
+				{
+					"PackType": "PUB",
+					"FtpTxtFileURL": "http://update.qiyoogame.com/petsaction_ks/hotupdatenew",
+					"FtpZipFileURL": "xxx"
+				},
+				{
+					"PackType": "PUBTEST",
+					"FtpTxtFileURL": "http://update.qiyoogame.com/petsaction_ks/hotupdatenew",
+					"FtpZipFileURL": "xxx"
+				},
+				{
+					"PackType": "DEV",
+					"FtpTxtFileURL": "http://172.16.10.221:8001/petsaction/hotupdate",
+					"FtpZipFileURL": "xxx"
+				},
+				{
+					"PackType": "TEST",
+					"FtpTxtFileURL": "http://log.qiyoogame.com/hot/meta_v2/test",
+					"FtpZipFileURL": "http://log.qiyoogame.com/hot/meta_v2/test"
+				}
+			]
+		}
+	],
+
+	"LoginType": "DEV",
+	"PackType": "DEV",
+	"IsRealPurchase": true,
+	"IsShowProtoMsgLog": false,
+	"IsShowDebugBtn": false,
+	"IsEnableLogTrace": false,
+	"IsEnableLogRealtimeWriteToLocal": false,
+	"IsEnableLogUpdate2Server": false, 
+	"IsShowReporter": false
+}

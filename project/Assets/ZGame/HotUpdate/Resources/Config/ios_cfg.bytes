@@ -1,0 +1,54 @@
+{
+	"ProductName": "星启Meta",
+	"AppVersion": "1.0.3",
+	"AppBundleVersion": "1",
+	"ResVersion": "0",
+	"PackTimeStamp": "2402061240",
+	"GameChannelId": 200,
+	"PaymentChannelId": 1,
+	"IsABResNameCrypto": true,
+	"ABResNameCryptoKey": "hijack88",
+	"ABResByteOffset": 3,
+	"GameDesignRatio": "1080,1920",
+	"ScreenOrientation": 1,
+	"GameInputType": 1,
+	"ResLoadType": 0,
+	"FirstOpenWindowName": "LoginFakeWindow",
+	 
+	"LoginData": [
+		{
+			"LoginType": "PUB",
+			"PostURL": "https://metaverse.elfeye.cn/gateway"
+		},
+		{
+			"LoginType": "DEV",
+			"PostURL": "https://meta923.vip.cpolar.top"
+		}
+	],
+	"PackData": [
+		{
+			"PackType": "PUB",
+			"FtpTxtFileURL": "http://log.qiyoogame.com/hot/meta_v2/pub",
+			"FtpZipFileURL": "http://log.qiyoogame.com/hot/meta_v2/pub"
+		},
+		{
+			"PackType": "DEV",
+			"FtpTxtFileURL": "http://log.qiyoogame.com/hot/meta_v2/dev",
+			"FtpZipFileURL": "http://log.qiyoogame.com/hot/meta_v2/dev"
+		},
+		{
+			"PackType": "TEST",
+			"FtpTxtFileURL": "http://log.qiyoogame.com/hot/meta_v2/test",
+			"FtpZipFileURL": "http://log.qiyoogame.com/hot/meta_v2/test"
+		}
+	],
+	"LoginType": "PUB",
+	"PackType": "PUB",
+	"IsRealPurchase": true,
+	"IsShowProtoMsgLog": true,
+	"IsShowDebugBtn": false,
+	"IsEnableLogTrace": false,
+	"IsEnableLogRealtimeWriteToLocal": false,
+	"IsEnableLogUpdate2Server": false,
+	"IsShowReporter": false
+}

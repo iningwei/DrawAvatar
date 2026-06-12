@@ -1,0 +1,156 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
+using UnityEditor.Callbacks;
+#if UNITY_IOS
+using UnityEditor.iOS.Xcode;
+#endif
+using UnityEngine;
+
+public class XCodeProcess
+{
+    protected const string ENABLE_BITCODE_KEY = "ENABLE_BITCODE";
+    protected const string USYM_UPLOAD_AUTH_TOKEN = "USYM_UPLOAD_AUTH_TOKEN";
+
+    [PostProcessBuild]
+    public static void OnPostprocessBuild(BuildTarget buildTarget, string buildPath)
+    {
+        if (buildTarget != BuildTarget.iOS)
+            return;
+#if UNITY_IOS
+        string pbxProjPath = PBXProject.GetPBXProjectPath(buildPath);
+        var pbxProject = new PBXProject();
+        pbxProject.ReadFromString(File.ReadAllText(pbxProjPath));
+        string targetGuid = pbxProject.GetUnityMainTargetGuid();
+        string frameworkGuid = pbxProject.GetUnityFrameworkTargetGuid();
+
+
+
+                /*
+                //unity 2019.4.x以上使用
+                string target = pbxProject.GetUnityFrameworkTargetGuid();
+                //Unity 2019.4.x下使用
+                // string target = pbxProject.GetUnityMainTargetGuid();
+                //unity 2018，2017版可使用
+                // string target = pbxProject.TargetGuidByName("Unity-iPhone"); 
+                */
+
+
+
+
+        //添加Capability
+        Debug.Log("pbxProjPath:" + pbxProjPath);
+        ProjectCapabilityManager projectCapabilityManager = new ProjectCapabilityManager(pbxProjPath,
+            $"{Application.productName}.entitlements", "Unity-iPhone");
+
+        //projectCapabilityManager.AddPushNotifications(false);//xcode 13.2.1 pushnofitication添加不上，参数传true ,false都没用
+        projectCapabilityManager.AddBackgroundModes( BackgroundModesOptions.RemoteNotifications | BackgroundModesOptions.BackgroundFetch);
+        projectCapabilityManager.WriteToFile();
+
+        /*
+        // 设置关闭Bitcode
+        pbxProject.SetBuildProperty(targetGuid, ENABLE_BITCODE_KEY, "NO");
+        pbxProject.SetBuildProperty(frameworkGuid, ENABLE_BITCODE_KEY, "NO");
+        */
+
+
+        /*Unity构建iOS版本报错：USYM_UPLOAD_AUTH_TOKEN，则添加下面内容
+        // https://www.jianshu.com/p/a1dee00748c4
+        // xcode archive filed
+        var token = pbxProject.GetBuildPropertyForAnyConfig(targetGuid, "USYM_UPLOAD_AUTH_TOKEN");
+        if (string.IsNullOrEmpty(token))
+        {
+            token = "FakeToken";
+        }
+        pbxProject.SetBuildProperty(targetGuid, USYM_UPLOAD_AUTH_TOKEN, token);
+        pbxProject.SetBuildProperty(frameworkGuid, USYM_UPLOAD_AUTH_TOKEN, token);
+        */
+
+
+        //添加系统库（Unity默认会添加部分库，不能添加重复的库，否则会有问题）       
+        //pbxProject.AddFrameworkToProject(frameworkGuid, "CoreTelephony.framework", false);
+        pbxProject.AddFrameworkToProject(frameworkGuid, "UserNotifications.framework", false);//FCM sdk必须的库
+
+
+        /*
+        //添加tbd         
+        //string fileGuidSqlite = pbxProject.AddFile("usr/lib/libsqlite3.tbd", "Libraries/libsqlite3.tbd", PBXSourceTree.Sdk);
+        */
+
+
+        /*
+        //添加引用的资源 如 .bundle文件
+        //例 
+        string p = .bundle地址;
+
+        string bun = pbxProject.AddFile(p, "名称.bundle", PBXSourceTree.Absolute);
+        pbxProject.AddFileToBuild(targetGuid, bun);
+        */
+
+
+        //修改Info.plist文件
+        SetInfoPlist(buildPath);
+
+        File.WriteAllText(pbxProjPath, pbxProject.WriteToString());
+
+        UnityEngine.Debug.Log("PBXProject process finished!" );
+#endif
+    }
+
+#if UNITY_IOS
+    public static void SetInfoPlist(string buildPath)
+    {
+        List<string> privacySensiticeData = new List<string>();
+
+        PlistDocument plist = GetInfoPlist(buildPath);
+
+        //选择语言（字符串）
+        //plist.root.SetString("NSPhotoLibraryAddUsageDescription", "此App需要您的同意,才能保存图片到您的相册");
+        //plist.root.SetString("NSPhotoLibraryUsageDescription", "此App需要您的同意才能读取媒体资料库");
+        //（bool值）
+        //plist.root.SetBoolean("ITSAppUsesNonExemptEncryption", false);
+        plist.root.SetBoolean("FirebaseMessagingAutoInitEnabled", false);
+
+
+        /*
+        //设置LSApplicationQueriesSchemes（数组）
+        //例
+        PlistElementArray loginChannelsArr;
+        loginChannelsArr = plist.root.CreateArray("LSApplicationQueriesSchemes");
+        loginChannelsArr.AddString("mqqapi");
+        loginChannelsArr.AddString("mqq");
+
+        //配置（字典）
+        PlistElementDict plistDic;
+        plistDic = plist.root.CreateDict("NSAppTransportSecurity");
+        plistDic.SetBoolean("NSAllowsArbitraryLoads", true);
+
+        // 添加 url scheme 
+        PlistElementArray urlTypes = plist.root.CreateArray("CFBundleURLTypes");
+        PlistElementDict wxUrl = urlTypes.AddDict();
+        wxUrl.SetString("CFBundleTypeRole", "Editor");
+        wxUrl.SetString("CFBundleURLName", "weixin");
+        wxUrl.SetString("CFBundleURLSchemes", "wx...............");
+        PlistElementArray wxUrlScheme = wxUrl.CreateArray("CFBundleURLSchemes");
+        wxUrlScheme.AddString("wx...............");
+        */
+
+        plist.WriteToFile(GetInfoPlistPath(buildPath));
+    }
+
+    private static PlistDocument GetInfoPlist(string buildPath)
+    {
+        PlistDocument plist = new PlistDocument();
+        var infoPlistPath = GetInfoPlistPath(buildPath);
+        plist.ReadFromFile(infoPlistPath);
+        return plist;
+    }
+
+    private static string GetInfoPlistPath(string buildPath)
+    {
+        return buildPath + "/Info.plist";
+    }
+#endif
+}
