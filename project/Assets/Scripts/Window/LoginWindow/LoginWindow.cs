@@ -1,10 +1,10 @@
- 
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI; 
+using UnityEngine.UI;
 using ZGame.Event;
 using ZGame.SDK;
 using ZGame.TimerTween;
@@ -142,15 +142,9 @@ public class LoginWindow : Window
         //GameUtils.PlayBGM(100000);
     }
 
-    private void enterPreloadProcedure()
-    {
-        SceneUtils.LoadScene("Main", null, () =>
-        { 
-            this.Close();
-        });
-    }
 
-   
+
+
 
     public override void AddEventListener()
     {
@@ -212,62 +206,19 @@ public class LoginWindow : Window
     }
 
     private void onLoginBtnClicked()
-    {
-        uid = ui_UIDInputField.text.Trim();
-        roomId = ui_RoomIdInputField.text.Trim();
-
-
-        string codeOrToken = string.Empty;
-        if (ConfigUtility.Data.GameChannelId == (int)GameChannelId.DouYin)
+    {  
+        SceneUtils.LoadScene("Main", null, () =>
         {
-            codeOrToken = dyStartToken;
-        }
-        else if (ConfigUtility.Data.GameChannelId == (int)GameChannelId.KuaiShou)
-        {
-            codeOrToken = ksCODE;
-        }
-
-
-        if (string.IsNullOrEmpty(codeOrToken))
-        {
-            if (string.IsNullOrEmpty(uid))//|| string.IsNullOrEmpty(roomId)
-            {
-
-                WindowUtil.ShowTip(1000);// 请检查输入项是否完备！
-                return;
-            }
-        }
-        else
-        {
-            uid = "";
-            roomId = "";
-        }
-
-        string version = Application.version;
-        long timeStamp = TimeTool.GetNowStamp();
-        string deviceId = SDKTools.GetDeviceId();
-        string loginType = ConfigUtility.Data.LoginType;
-
-
-
-        var loginURL = ConfigUtility.GetLoginURL();
-        Debug.Log("login--> loginType:" + loginType + ", version:" + version + ",URL:" + loginURL);
-        //ServiceFetch.loginService.DoLogin(loginURL, uid, codeOrToken, version, timeStamp);
+            this.Close();
+        });
     }
 
-    public override void HandleMessage(int msgId, params object[] paras)
-    {
-        base.HandleMessage(msgId, paras);
-        if (msgId == WindowMsgID.OnLoginS2CSuccess)
-        {
-            this.enterPreloadProcedure();
-        }
-    }
+
     public override void RemoveEventListener()
     {
         base.RemoveEventListener();
         this.ui_LoginBtn.onClick.RemoveAllListeners();
-        
+
         ui_UIDToggle.onValueChanged.RemoveAllListeners();
         ui_RoomIdToggle.onValueChanged.RemoveAllListeners();
 

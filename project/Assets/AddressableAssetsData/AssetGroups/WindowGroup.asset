@@ -16,7 +16,32 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 75df11bab1a29ce4c93a2f842dc4258c
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 0879fb153ba585a4cba96c4c8df4c084
+    m_Address: LoadingWindow.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5098d2a24cc56ae439a0db6b1359ccea
+    m_Address: NetMaskWindow.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 979c4642030c3204c86374b590840ec4
+    m_Address: TipWindow.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bc63fddec0dea3741a7790f53d961690
+    m_Address: LoginWindow.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: de868650338757346b49997944ffe771
+    m_Address: DynamicCfgWindow.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 285b97508bfb6d34285ab9363d883299, type: 2}
   m_SchemaSet:

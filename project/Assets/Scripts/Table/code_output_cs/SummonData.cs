@@ -33,12 +33,6 @@ public class SummonData{
 	 public string[] commandStrs;
 
 	 /// <summary>
-	 /// 
-	 /// 1,红 ；2，蓝色
-	 /// </summary>
-	 public string associateCompType;
-
-	 /// <summary>
 	 /// 是否启用设置
 	 /// 主要针对礼物：是否把该礼物放入设置界面，允许主播开启或者该礼物特效
 	 /// </summary>

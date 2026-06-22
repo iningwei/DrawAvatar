@@ -52,11 +52,10 @@ namespace ZGame.ZTable{
 						}
 						entity.giftSummonType=int.Parse(vals[3].Trim());
 						entity.commandStrs=string.IsNullOrEmpty(vals[4].Trim())?null:vals[4].Trim().Split(',');
-						entity.associateCompType=vals[5];
-						entity.enableSetting=bool.Parse(vals[6].Trim());
-						entity.giftId=vals[7];
-						entity.summonActorRule=vals[8];
-						entity.keyShortcut=vals[9];
+						entity.enableSetting=bool.Parse(vals[5].Trim());
+						entity.giftId=vals[6];
+						entity.summonActorRule=vals[7];
+						entity.keyShortcut=vals[8];
 						entityMap[key]=entity;
 					}
 					catch (Exception lineEx){
